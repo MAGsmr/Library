@@ -6,17 +6,19 @@ import java.util.List;
 
 public interface ClientDao{
 
-    ClientImpl get(Integer id);
+    ClientImpl getByID(String id);
 
-    ClientImpl get(String login);
+    ClientImpl getByName(String login);
 
-    void getBook(Integer clientID, Integer bookID);
+    void getBook(String clientID, String bookID);
+
+    void returnBook(String clientID, String bookID);
 
     boolean create(ClientImpl client);
 
-    void update(ClientImpl client);
+    void setPriv(String id, String priv);
 
-    void delete(Integer id);
+    void delete(String id);
 
     List<ClientImpl> getAll();
 

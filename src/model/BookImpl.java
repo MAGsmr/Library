@@ -2,14 +2,14 @@ package model;
 
 public class BookImpl implements Book{
 
-    private Integer id;
+    private String id;
     private String title;
     private Integer year;
     private String genre;
 
     public BookImpl(){}
 
-    public BookImpl(Integer id, String title, Integer year, String genre){
+    public BookImpl(String id, String title, Integer year, String genre){
         this.id = id;
         this.title = title;
         this.year = year;
@@ -17,12 +17,12 @@ public class BookImpl implements Book{
     }
 
     @Override
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

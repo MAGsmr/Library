@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 public class SqlClientDao implements ClientDao {
 
@@ -27,13 +28,14 @@ public class SqlClientDao implements ClientDao {
         }
     }
 
-    public ClientImpl get(Integer id){
+    @Override
+    public ClientImpl getByID(String id){
 
         String sql = "SELECT * FROM Client WHERE ID = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            statement.setInt(1, id);
+            statement.setString(1, id);
 
             ResultSet result = statement.executeQuery();
 
@@ -44,7 +46,8 @@ public class SqlClientDao implements ClientDao {
         return null;
     }
 
-    public ClientImpl get(String login){
+    @Override
+    public ClientImpl getByName(String login){
         String sql = "SELECT * FROM Client WHERE Login = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -61,16 +64,38 @@ public class SqlClientDao implements ClientDao {
     }
 
     @Override
-    public void getBook(Integer clientID, Integer bookID) {
-        String sql = "INSERT INTO Client_book (Client_ID, Book_ID) VALUES (" + clientID + ", " + bookID + ")";
+    public void getBook(String clientID, String bookID) {
+        String sql = "INSERT INTO Client_book VALUES (?,?,?)";
         try {
-            Statement statement = connection.createStatement();
-            statement.executeQuery(sql);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1,UUID.randomUUID().toString());
+            statement.setString(2,clientID);
+            statement.setString(3,bookID);
+
+            statement.executeUpdate();
+
+            statement.close();
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
+
+    @Override
+    public void returnBook(String clientID, String bookID) {
+        String sql = "DELETE FROM Client_book WHERE Client_ID = ? AND Book_ID = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1,clientID);
+            statement.setString(2,bookID);
+
+            statement.executeUpdate();
+
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public boolean create(ClientImpl client) {
@@ -78,13 +103,42 @@ public class SqlClientDao implements ClientDao {
     }
 
     @Override
-    public void update(ClientImpl client) {
+    public void setPriv(String id, String priv) {
+        String sql = "UPDATE Client SET Privilege = ? WHERE ID = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1,priv);
+            statement.setString(2,id);
 
+            statement.executeUpdate();
+
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
+        String sql = "DELETE FROM Client WHERE ID = ?";
+        String sql1 = "DELETE FROM Client_book WHERE Client_ID = ?";
+        try {
 
+            PreparedStatement statement1 = connection.prepareStatement(sql1);
+            statement1.setString(1,id);
+
+            statement1.executeUpdate();
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1,id);
+
+            statement.executeUpdate();
+
+            statement.close();
+            statement1.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -98,13 +152,15 @@ public class SqlClientDao implements ClientDao {
             while (result.next()) {
                 ClientImpl client = new ClientImpl();
 
-                client.setId(result.getInt("ID"));
+                client.setId(result.getString("ID"));
                 client.setLogin(result.getString("Login"));
                 client.setPass(result.getString("Pass"));
                 client.setPrivilege(result.getString("Privilege"));
 
                 clients.add(client);
             }
+
+            statement.close();
 
             return clients;
         }catch (Exception e){
@@ -117,7 +173,7 @@ public class SqlClientDao implements ClientDao {
         if(result.next()){
             ClientImpl client = new ClientImpl();
 
-            client.setId(result.getInt("ID"));
+            client.setId(result.getString("ID"));
             client.setLogin(result.getString("Login"));
             client.setPass(result.getString("Pass"));
             client.setPrivilege(result.getString("Privilege"));
@@ -129,39 +185,4 @@ public class SqlClientDao implements ClientDao {
             return null;
         }
     }
-
-    /*private static DaoFactory factory = new SqlDaoFactoryImpl();
-
-    public static ClientImpl getClient(int id){
-        Locale.setDefault(Locale.ENGLISH);
-        try (Connection connection = factory.getConnection()){
-            ClientDao clientDao = factory.getClient(connection);
-            return clientDao.get(id);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static ClientImpl getClient(String login){
-        Locale.setDefault(Locale.ENGLISH);
-        try (Connection connection = factory.getConnection()){
-            ClientDao clientDao = factory.getClient(connection);
-            return clientDao.get(login);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static List<ClientImpl> getClients(){
-        Locale.setDefault(Locale.ENGLISH);
-        try (Connection connection = factory.getConnection()){
-            ClientDao clientDao = factory.getClient(connection);
-            return clientDao.getAll();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }*/
 }

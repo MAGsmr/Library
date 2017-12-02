@@ -2,20 +2,20 @@ package model;
 
 public interface Client {
 
-    public Integer getId();
+    String getId();
 
-    public String getLogin();
+    String getLogin();
 
-    public String getPass();
+    String getPass();
 
-    public String getPrivilege();
+    String getPrivilege();
 
-    public void setId(Integer id);
+    void setId(String id);
 
-    public void setLogin(String login);
+    void setLogin(String login);
 
-    public void setPass(String pass);
+    void setPass(String pass);
 
-    public void setPrivilege(String privilege);
+    void setPrivilege(String privilege);
 
 }

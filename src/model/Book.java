@@ -2,20 +2,20 @@ package model;
 
 public interface Book {
 
-    public Integer getId();
+    String getId();
 
-    public void setId(Integer id);
+    void setId(String id);
 
-    public Integer getYear();
+    Integer getYear();
 
-    public void setYear(Integer year);
+    void setYear(Integer year);
 
-    public String getGenre();
+    String getGenre();
 
-    public void setGenre(String genre);
+    void setGenre(String genre);
 
-    public String getTitle();
+    String getTitle();
 
-    public void setTitle(String title);
+    void setTitle(String title);
 
 }

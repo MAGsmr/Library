@@ -1,21 +1,24 @@
 package model.database;
 
 import model.Author;
+import model.AuthorImpl;
 
 import java.util.List;
 
 public interface AuthorDao {
 
-    Author get(Integer id);
+    AuthorImpl getByID(String id);
 
-    Author get(String name);
+    AuthorImpl getByName(String name);
 
-    boolean create(Author author);
+    AuthorImpl getByBook(String name);
 
-    void update(Author author);
+    boolean create(AuthorImpl author);
 
-    void delete(Integer id);
+    void update(AuthorImpl author);
 
-    List<Author> getAll();
+    void delete(String id);
+
+    List<AuthorImpl> getAll();
 
 }

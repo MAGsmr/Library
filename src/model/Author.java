@@ -2,9 +2,9 @@ package model;
 
 public interface Author {
 
-    void setId(Integer id);
+    void setId(String id);
 
-    Integer getId();
+    String getId();
 
     void setName(String name);
 

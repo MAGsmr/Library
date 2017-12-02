@@ -2,23 +2,23 @@ package model;
 
 public class AuthorImpl implements Author{
 
-    private Integer id;
+    private String id;
     private String name;
 
     public AuthorImpl(){}
 
-    public AuthorImpl(Integer id, String name){
+    public AuthorImpl(String id, String name){
         this.id = id;
         this. name = name;
     }
 
     @Override
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     @Override
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 

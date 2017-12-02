@@ -4,14 +4,14 @@ public class ClientImpl implements Client{
 
     //Обычный класс клиента для описания его структуры и работы с данными, полученными из базы
 
-    private Integer id;
+    private String id;
     private String login;
     private String pass;
     private String privilege;
 
     public ClientImpl(){ }
 
-    public ClientImpl(Integer id, String login, String pass, String privilege){
+    public ClientImpl(String id, String login, String pass, String privilege){
 
         this.id = id;
         this.login = login;
@@ -20,7 +20,7 @@ public class ClientImpl implements Client{
     }
 
     @Override
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -40,7 +40,7 @@ public class ClientImpl implements Client{
     }
 
     @Override
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

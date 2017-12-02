@@ -30,11 +30,11 @@ public class SqlBookDao implements BookDao {
     }
 
     @Override
-    public BookImpl get(Integer id) {
+    public BookImpl getByID(String id) {
         String sql = "SELECT * FROM Book WHERE ID = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, id);
+            statement.setString(1, id);
 
             ResultSet result = statement.executeQuery();
 
@@ -46,7 +46,7 @@ public class SqlBookDao implements BookDao {
     }
 
     @Override
-    public BookImpl get(String title) {
+    public BookImpl getByName(String title) {
         String sql = "SELECT * FROM Book WHERE Title = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -70,14 +70,14 @@ public class SqlBookDao implements BookDao {
     public void update(BookImpl book) {}
 
     @Override
-    public void delete(Integer id) {}
+    public void delete(String id) {}
 
     @Override
-    public List<BookImpl> getByClientID(Integer id) {
+    public List<BookImpl> getByClientID(String id) {
         String sql = "SELECT book.id, book.title, book.year, book.genre FROM Book,Client_book WHERE Book.ID=Client_book.Book_ID AND Client_book.Client_ID=?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1,id);
+            statement.setString(1,id);
 
             ResultSet result = statement.executeQuery();
 
@@ -108,14 +108,16 @@ public class SqlBookDao implements BookDao {
         while (result.next()) {
             BookImpl book = new BookImpl();
 
-            book.setId(result.getInt("ID"));
+            book.setId(result.getString("ID"));
             book.setTitle(result.getString("Title"));
             book.setYear(Integer.parseInt(result.getString("Year")));
             book.setGenre(result.getString("Genre"));
 
             books.add(book);
         }
+
         connection.close();
+
         return books;
     }
 
@@ -123,7 +125,7 @@ public class SqlBookDao implements BookDao {
         if(result.next()){
             BookImpl book = new BookImpl();
 
-            book.setId(result.getInt("ID"));
+            book.setId(result.getString("ID"));
             book.setTitle(result.getString("Title"));
             book.setYear(Integer.parseInt(result.getString("Year")));
             book.setGenre(result.getString("Genre"));

@@ -7,17 +7,17 @@ import java.util.List;
 
 public interface BookDao {
 
-    BookImpl get(Integer id);
+    BookImpl getByID(String id);
 
-    BookImpl get(String title);
+    BookImpl getByName(String title);
 
     boolean create(BookImpl book);
 
     void update(BookImpl book);
 
-    void delete(Integer id);
+    void delete(String id);
 
-    List<BookImpl> getByClientID(Integer id);
+    List<BookImpl> getByClientID(String id);
 
     List<BookImpl> getAll();
 
