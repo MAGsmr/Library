@@ -9,13 +9,15 @@ public interface BookDao {
 
     BookImpl getByID(String id);
 
+    List<BookImpl> getByAuthor(String id);
+
     BookImpl getByName(String title);
 
-    boolean create(BookImpl book);
+    void create(String title,String year,String genre, String author);
 
     void update(BookImpl book);
 
-    void delete(String id);
+    void delete(String name);
 
     List<BookImpl> getByClientID(String id);
 

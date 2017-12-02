@@ -106,6 +106,7 @@ public class Main /*extends Application */{
                                         break;
                                     default:
                                         System.out.println("Неверный ввод. Попробуйте снова");
+                                        break;
                                 }
                             }
                             break;
@@ -163,13 +164,14 @@ public class Main /*extends Application */{
                                         break;
                                     default:
                                         System.out.println("Неверный ввод. Попробуйте снова");
+                                        break;
                                 }
                             }
                             break;
                         case "Moder":
                             while(run) {
-                                System.out.println("Что бы вы хотели сделать?\nПолучить список всех книг? Введите '1'.\nПолучить список всех авторов? Введите '2'.\nУзнать автора книги?  Введите '3'.\nДобавить автора?  Введите '4'.\nДобавить автору книгу?  Введите '5'.\nВыйти? Введите '6'.");
-                                String bookName;
+                                System.out.println("Что бы вы хотели сделать?\nПолучить список всех книг? Введите '1'.\nПолучить список всех авторов? Введите '2'.\nУзнать автора книги?  Введите '3'.\nДобавить автора?  Введите '4'.\nДобавить автору книгу?  Введите '5'.\nУдалить книгу?  Введите '6'.\nУдалить автора?  Введите '7'.\nВыйти? Введите '8'.");
+                                String bookName, bookYear, authorName, bookGenre;
                                 select = sc.nextInt();
                                 switch (select) {
                                     case 1:
@@ -196,14 +198,69 @@ public class Main /*extends Application */{
                                         }
                                         break;
                                     case 4:
+                                        System.out.println("Введите имя автора: ");
+                                        sc.nextLine();
+                                        authorName = sc.nextLine();
+                                        if(daoFactory.author().getByName(authorName)==null) {
+                                            daoFactory.author().create(authorName);
+                                            System.out.println("Добавлен автор: " + authorName);
+                                        }else {
+                                            System.out.println("Такой автор уже есть");
+                                        }
                                         break;
                                     case 5:
+                                        System.out.println("Введите имя автора: ");
+                                        sc.nextLine();
+                                        authorName = sc.nextLine();
+                                        author = daoFactory.author().getByName(authorName);
+                                        if(author!=null){
+                                            System.out.println("Введите название книги: ");
+                                            bookName = sc.nextLine();
+                                            System.out.println("Введите год книги: ");
+                                            bookYear = sc.nextLine();
+                                            System.out.println("Введите жанр книги: ");
+                                            bookGenre = sc.nextLine();
+                                            if (daoFactory.book().getByName(bookName)==null) {
+                                                daoFactory.book().create(bookName, bookYear, bookGenre, author.getName());
+
+                                                System.out.println("Книга " + bookName + " теперь написана автором " + authorName);
+                                            }else {
+                                                System.out.println("Книга с таким названием уже есть");
+                                            }
+                                        }else {
+                                            System.out.println("Нет автора с таким именем");
+                                        }
                                         break;
                                     case 6:
+                                        System.out.println("Введите название книги: ");
+                                        sc.nextLine();
+                                        bookName = sc.nextLine();
+                                        book = daoFactory.book().getByName(bookName);
+                                        if(book!=null) {
+                                            daoFactory.book().delete(book.getTitle());
+                                            System.out.println("Книга " + book.getTitle() + " удалена");
+                                        }else {
+                                            System.out.println("Книги с таким названием нет");
+                                        }
+                                        break;
+                                    case 7:
+                                        System.out.println("Введите имя автора: ");
+                                        sc.nextLine();
+                                        authorName = sc.nextLine();
+                                        author = daoFactory.author().getByName(authorName);
+                                        if(author!=null){
+                                            daoFactory.author().delete(author.getName());
+                                            System.out.println("Автор " + author.getName() + " удален");
+                                        }else {
+                                            System.out.println("Нет автора с таким именем");
+                                        }
+                                        break;
+                                    case 8:
                                         run=false;
                                         break;
                                     default:
                                         System.out.println("Неверный ввод. Попробуйте снова");
+                                        break;
                                 }
                             }
                             break;
@@ -216,7 +273,9 @@ public class Main /*extends Application */{
             }
             System.out.print("Попробуете войти снова?(y): ");
             assepting = sc.next().charAt(0);
-            if(assepting!='y'){
+            if(assepting == 'y'){
+                run=true;
+            }else {
                 run=false;
             }
         }

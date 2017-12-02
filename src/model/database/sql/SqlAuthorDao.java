@@ -4,11 +4,14 @@ import model.Author;
 import model.AuthorImpl;
 import model.BookImpl;
 import model.database.AuthorDao;
+import model.database.DaoFactory;
+import model.database.DaoFactoryImpl;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 public class SqlAuthorDao implements AuthorDao {
 
@@ -16,6 +19,8 @@ public class SqlAuthorDao implements AuthorDao {
     private String name = "GAV_6308";
     private String password = "qwerty";
     private static String driver = "oracle.jdbc.driver.OracleDriver";
+
+    private DaoFactory daoFactory = new DaoFactoryImpl();
 
     private static Connection connection = null;
 
@@ -69,6 +74,7 @@ public class SqlAuthorDao implements AuthorDao {
     public AuthorImpl getByBook(String name) {
         String sql = "SELECT Author.id FROM Author, Author_book, Book WHERE Author.id = Author_book.Author_id and Book.id=Author_book.Book_id and book.title=?";
         try {
+
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, name);
 
@@ -83,8 +89,20 @@ public class SqlAuthorDao implements AuthorDao {
     }
 
     @Override
-    public boolean create(AuthorImpl author) {
-        return false;
+    public void create(String name) {
+
+        String sql = "INSERT INTO Author VALUES (?,?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, UUID.randomUUID().toString());
+            statement.setString(2,name);
+
+            statement.executeUpdate();
+
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -93,8 +111,36 @@ public class SqlAuthorDao implements AuthorDao {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(String name) {
+        String sql = "DELETE FROM Author WHERE ID = ?";
+        String sql1 = "DELETE FROM Author_book WHERE Author_ID = ?";
+        try {
 
+            List<BookImpl> books = daoFactory.book().getByAuthor(daoFactory.author().getByName(name).getId());
+
+            new SqlAuthorDao();
+
+            PreparedStatement statement1 = connection.prepareStatement(sql1);
+            statement1.setString(1,daoFactory.author().getByName(name).getId());
+
+            statement1.executeUpdate();
+
+            for(BookImpl book : books){
+                daoFactory.book().delete(book.getTitle());
+            }
+
+            new SqlAuthorDao();
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1,daoFactory.author().getByName(name).getId());
+
+            statement.executeUpdate();
+
+            statement.close();
+            statement1.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -13,11 +13,11 @@ public interface AuthorDao {
 
     AuthorImpl getByBook(String name);
 
-    boolean create(AuthorImpl author);
+    void create(String name);
 
     void update(AuthorImpl author);
 
-    void delete(String id);
+    void delete(String name);
 
     List<AuthorImpl> getAll();
 
