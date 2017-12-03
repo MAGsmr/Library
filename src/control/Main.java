@@ -86,6 +86,7 @@ public class Main /*extends Application */{
                                         book = daoFactory.book().getByName(bookName);
                                         if(book!=null) {
                                             daoFactory.client().getBook(client.getId(), book.getId());
+                                            System.out.println("Книга добавлена в ваш список");
                                         }else {
                                             System.out.println("Книги с таким названием нет");
                                         }
@@ -97,6 +98,7 @@ public class Main /*extends Application */{
                                         book = daoFactory.book().getByName(bookName);
                                         if(book!=null) {
                                             daoFactory.client().returnBook(client.getId(), book.getId());
+                                            System.out.println("Книга возвращена");
                                         }else {
                                             System.out.println("Книги с таким названием нет");
                                         }
@@ -131,6 +133,7 @@ public class Main /*extends Application */{
                                         if (client1!=null) {
                                             if (!client1.getLogin().equals(client.getLogin())) {
                                                 daoFactory.client().delete(client1.getId());
+                                                System.out.println("Пользователь "+clientName +" удален");
                                             }else {
                                                 System.out.println("Это не выход");
                                             }
@@ -149,6 +152,7 @@ public class Main /*extends Application */{
                                                 clientPriv = sc.nextLine();
                                                 if(clientPriv.equals("Client") || clientPriv.equals("Moder") || clientPriv.equals("Admin")) {
                                                     daoFactory.client().setPriv(client2.getId(), clientPriv);
+                                                    System.out.println("Пользователь "+ clientName + " теперь " + clientPriv);
                                                 }else {
                                                     System.out.println("Таких привилегий нет");
                                                 }
@@ -271,12 +275,41 @@ public class Main /*extends Application */{
             } else {
                 System.out.println("Такого пользователя нет");
             }
-            System.out.print("Попробуете войти снова?(y): ");
-            assepting = sc.next().charAt(0);
-            if(assepting == 'y'){
-                run=true;
-            }else {
-                run=false;
+            System.out.print("Попробуете войти?(1) Зарегестрироваться?(2) Выйти?(3) : ");
+            select = sc.nextInt();
+            String clientName, clientPass, clientPass1;
+            switch (select){
+                case 1:
+                    run=true;
+                    break;
+                case 2:
+                    System.out.println("Введите логин: ");
+                    sc.nextLine();
+                    clientName = sc.nextLine();
+                    client = daoFactory.client().getByName(clientName);
+                    if(client==null){
+                        System.out.println("Введите пароль: ");
+                        clientPass = sc.nextLine();
+                        System.out.println("Повторите пароль: ");
+                        clientPass1 = sc.nextLine();
+                        if (clientPass.equals(clientPass1)) {
+                            daoFactory.client().create(clientName, clientPass);
+
+                            System.out.println("Вы зарегестрированны. Пожалуйста, войдите в систему для работы");
+                        }else {
+                            System.out.println("Пароль введенн неверный");
+                        }
+                    }else {
+                        System.out.println("Пользователь с таким именем уже существует");
+                    }
+                    run = true;
+                    break;
+                case 3:
+                    run=false;
+                    break;
+                default:
+                    System.out.println("Неверный ввод. Попробуйте снова");
+                    break;
             }
         }
     }

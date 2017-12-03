@@ -98,8 +98,22 @@ public class SqlClientDao implements ClientDao {
 
 
     @Override
-    public boolean create(ClientImpl client) {
-        return false;
+    public void create(String login, String pass) {
+        String sql = "INSERT INTO Client VALUES (?,?,?,?)";
+        String privilege = "Client";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, UUID.randomUUID().toString());
+            statement.setString(2, login);
+            statement.setString(3, pass);
+            statement.setString(4, privilege);
+
+            statement.executeUpdate();
+
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

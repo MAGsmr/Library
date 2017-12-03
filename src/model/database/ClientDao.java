@@ -14,7 +14,7 @@ public interface ClientDao{
 
     void returnBook(String clientID, String bookID);
 
-    boolean create(ClientImpl client);
+    void create(String login, String pass);
 
     void setPriv(String id, String priv);
 
